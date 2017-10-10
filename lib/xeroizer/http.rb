@@ -166,7 +166,7 @@ module Xeroizer
             else raise OAuth::UnknownError.new(problem + ':' + description)
           end
         else
-          raise OAuth::UnknownError.new("Xero API may be down or the way OAuth errors are provided by Xero may have changed.")
+          raise OAuth::UnknownError.new("Xero API may be down or: #{response.plain_body}")
         end
       end
 
