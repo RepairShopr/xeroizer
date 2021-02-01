@@ -26,7 +26,13 @@ module Xeroizer
 
     class TokenExpired < StandardError; end
     class TokenInvalid < StandardError; end
-    class RateLimitExceeded < StandardError; end
+    class RateLimitExceeded < StandardError
+      attr_accessor :http_response
+      def initialize(message = nil, response = nil)
+        @http_response = response
+        super(message)
+      end
+    end
     class ConsumerKeyUnknown < StandardError; end
     class NonceUsed < StandardError; end
     class UnknownError < StandardError; end
