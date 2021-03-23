@@ -23,19 +23,25 @@ module Xeroizer
   # http://github.com/jnunemaker/twitter/
 
   class OAuth
+    class OAuthError < XeroizerError; end
+    class TokenExpired < OAuthError; end
+    class TokenInvalid < OAuthError; end
+    class ConsumerKeyUnknown < OAuthError; end
+    class NonceUsed < OAuthError; end
+    class OrganisationOffline < OAuthError; end
+    class Forbidden < OAuthError; end
+    class UnknownError < OAuthError; end
 
-    class TokenExpired < StandardError; end
-    class TokenInvalid < StandardError; end
-    class RateLimitExceeded < StandardError
-      attr_accessor :http_response
-      def initialize(message = nil, response = nil)
-        @http_response = response
-        super(message)
+    class RateLimitExceeded < OAuthError
+      def initialize(description, retry_after: nil, daily_limit_remaining: nil)
+        super(description)
+
+        @retry_after = retry_after
+        @daily_limit_remaining = @daily_limit_remaining
       end
+
+      attr_reader :retry_after, :daily_limit_remaining
     end
-    class ConsumerKeyUnknown < StandardError; end
-    class NonceUsed < StandardError; end
-    class UnknownError < StandardError; end
 
     unless defined? XERO_CONSUMER_OPTIONS
       XERO_CONSUMER_OPTIONS = {
@@ -138,7 +144,6 @@ module Xeroizer
           consumer.http.cert = @consumer_options[:ssl_client_cert]
           consumer.http.key = @consumer_options[:ssl_client_key]
         end
-        consumer
 
         if @consumer_options[:http_debug_output]
           consumer.http.set_debug_output(@consumer_options[:http_debug_output])

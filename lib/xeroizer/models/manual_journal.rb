@@ -1,9 +1,13 @@
+require "xeroizer/models/attachment"
+
 module Xeroizer
   module Record
     
     class ManualJournalModel < BaseModel
         
       set_permissions :read, :write, :update
+
+      include AttachmentModel::Extensions
                   
     end
     
@@ -14,6 +18,8 @@ module Xeroizer
         'POSTED' =>     'Posted'
       } unless defined?(JOURNAL_STATUS)
       JOURNAL_STATUSES = JOURNAL_STATUS.keys.sort
+
+      include Attachment::Extensions
             
       set_primary_key :manual_journal_id
       set_possible_primary_keys :manual_journal_id
@@ -28,7 +34,8 @@ module Xeroizer
       string        :external_link_provider_name # only seems to be read-only at the moment
       boolean       :show_on_cash_basis_reports
       datetime_utc  :updated_date_utc, :api_name => 'UpdatedDateUTC'
-      
+      boolean       :has_attachments
+
       has_many      :journal_lines, :model_name => 'ManualJournalLine', :complete_on_page => true
       
       validates_presence_of :narration
