@@ -68,11 +68,7 @@ module Xeroizer
             :type           => field_type
           })
           define_method internal_field_name do 
-<<<<<<< HEAD
-            @attributes[field_name] == nil ? value_if_nil :  @attributes[field_name]
-=======
             @attributes[field_name].nil? ? value_if_nil : @attributes[field_name]
->>>>>>> upstream/master
           end
           
           unless options[:skip_writer]

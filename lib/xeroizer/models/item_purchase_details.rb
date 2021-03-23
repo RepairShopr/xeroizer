@@ -12,11 +12,7 @@ module Xeroizer
       decimal :unit_price
       string  :account_code
       string  :tax_type
-<<<<<<< HEAD
-      decimal :cogs_account_code, :api_name => "COGSAccountCode"
-=======
       string  :cogs_account_code, api_name: 'COGSAccountCode'
->>>>>>> upstream/master
 
     end
     
